@@ -16,16 +16,6 @@ body::before {
     z-index: -1;
 }
 
-.container {
-    max-width: 800px;
-    margin: 40px auto;
-    padding: 30px;
-    background-color: #fcf6f0;
-    border-radius: 12px;
-    box-shadow: 0 6px 16px rgba(0,0,0,0.2);
-}
-
-
 h1 {
     color: #850825; 
     text-align: center;
@@ -35,7 +25,7 @@ h1 {
 }
 
 h2 {
-    color: #000;
+    color: #850825;
     font-weight: 700;
     font-size: 1em;
     text-transform: uppercase;
@@ -84,10 +74,69 @@ tr:nth-child(even) {
     margin: 20px auto; 
     padding: 12px 0; 
     background-color: #850825; 
-    color: #fcf6f0; 
+    color: #fffdd0; 
     text-decoration: none;
     border-radius: 8px;
     font-size: 16px;
     text-align: center;
 }
 
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 20px;
+    background-color: #850825;
+}
+
+.page-header h1 {
+    margin: 0;
+    text-align: left;
+    color: #fffdd0;
+    font-family: "Playfair Display", serif;
+}
+
+nav {
+    display: flex;
+    gap: 15px;
+}
+
+nav a {
+    text-decoration: none;
+    color: #fffdd0;
+    font-weight: bold;
+    font-family: "Raleway", sans-serif;
+}
+
+.about p { font-family: Georgia, serif; 
+    color: #4a1f00; 
+    line-height: 1.6;
+    font-size: 1.1rem; } 
+
+.highlights { max-width: 900px;
+    margin: 50px auto; 
+    display: flex; 
+    flex-wrap: wrap; 
+    justify-content: center; 
+    gap: 20px; } 
+     
+.highlight-card { 
+    background-color: #f7d9b8; 
+    border-radius: 10px; 
+    padding: 15px; 
+    width: 250px; 
+    text-align: center; }
+     
+.highlight-card h3 {
+    color: #850825;
+    margin-bottom: 10px; }
+    
+.highlight-card p { color: #4a1f00; }
+
+footer {
+    text-align: center;
+    padding: 8px 0;
+    font-size: 0.8em;
+    color: #fcf6f0;
+    background-color: #850825;
+    font-family: "Raleway", sans-serif;}
