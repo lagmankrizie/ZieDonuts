@@ -1,104 +1,121 @@
 <?php
+declare(strict_types=1);
 $storeName = "Zie Donuts";
+// Donuts and prices with stock
+$donuts = [
+    'Glazed Donut' => ['price' => 30, 'stock' => 13],
+    'Chocolate Frosted' => ['price' => 35, 'stock' => 9],
+    'Strawberry Donut' => ['price' => 35, 'stock' => 15],
+    'Sprinkle Donut' => ['price' => 35, 'stock' => 15],
+    'Choco Butternut' => ['price' => 40, 'stock' => 20],
+];
+$tax = 5;
 
-// Donuts and prices
-$donuts = ["Glazed Donut", "Chocolate Frosted", "Strawberry Donut", "Sprinkle Donut", "Choco Butternut"];
-$prices = [30, 35, 35, 35, 40];
+// Functions
+function get_reorder_message(int $stock): string {
+    return ($stock < 10) ? 'Yes' : 'No';
+}
+function get_total_value(float $price, int $quantity): float {
+    return $price * $quantity;
+}
+function get_tax_due(float $price, int $quantity, int $tax = 0): float {
+    return ($price * $quantity) * ($tax / 100);
+}
 
-// Descriptions and messages
-$description = "We offer freshly made donuts every day using quality ingredients. 
+// Descriptions
+$description = "At Zie Donuts, We offer freshly made donuts every day using quality ingredients. 
 Our menu includes classic flavors and premium favorites that many customers love. 
 Check out our delicious selections below and enjoy sweet treats made with care and passion.";
 
-$welcomeMessage = " We're delighted to share our love for freshly baked donuts with you. 
-Every day, we create a variety of sweet treats using only the finest ingredients, from classic favorites like Glazed and Chocolate Frosted,
-to our special Choco Butternut delights. Whether you're stopping by for breakfast, a quick snack, or a celebration with friends and family,
-our donuts are crafted to bring a smile to your day. Come join us and experience the joy of soft, fluffy, and delicious donuts made with care and passion!";
+$welcomeMessage = "We're delighted to share our love for freshly baked donuts with you. 
+Every day, we create a variety of sweet treats using only the finest ingredients, 
+from classic favorites like Glazed and Chocolate Frosted, to our special Choco Butternut delights. 
+Whether you're stopping by for breakfast, a quick snack, or a celebration, our donuts are crafted 
+to bring a smile to your day.";
 
-$aboutus = "Welcome to Zie Donuts! Founded with a passion for creating joy in every bite, we craft our donuts fresh daily using only the finest ingredients.
-From our classic Glazed Donuts to the indulgent Choco Butternut, each treat is made with care to delight your taste buds.
-At Zie Donuts, we believe every donut is more than just a snack—its a moment of happiness.
-Join us for breakfast, a sweet snack, or a special treat, and experience the love and passion baked into every donut!";
-
-// Promo calculations
-$totalSix = array_sum($prices) + $prices[0];
+// Promo Calculations
+$donutPrices = array_column($donuts, 'price');
+while (count($donutPrices) < 6) {
+    $donutPrices[] = $donutPrices[0];
+}
+$totalSix = 0;
+$count = 0;
+foreach ($donuts as $data) {
+    if ($count == 6) break;
+    $totalSix += $data['price'];
+    $count++;
+}
 $discountAmountBox = $totalSix * 0.05;
 $finalSix = $totalSix - $discountAmountBox;
 
-$threeChocoTotal = $prices[4] * 3;
+// Promo 2: 3 Choco Butternut
+$threeChocoTotal = $donuts['Choco Butternut']['price'] * 3;
 $discountChoco = $threeChocoTotal * 0.05;
 $finalChocoPrice = $threeChocoTotal - $discountChoco;
 
-// Determine page
 $page = $_GET['page'] ?? 'home';
 ?>
-
 <!DOCTYPE html>
-<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $storeName ?></title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="page-header">
+<div class="page-header">
     <h1><?= $storeName ?></h1>
-    <?php include 'header.php'; ?>
+    <?php include 'includes/header.php'; ?>
 </div>
 <?php
-if ($page == 'home') {
-?>
+if ($page == 'home') { ?>
     <h1>Welcome To <?= $storeName ?>!</h1>
     <h2>Fresh, Sweet, and Delightful Every Day!</h2>
     <p><?= $welcomeMessage ?></p>
     <a href="?page=menu" class="btn">View Our Menu</a>
-
     <div class="highlights">
         <div class="highlight-card"><h3>Daily Fresh Donuts</h3><p>Soft, fluffy, and sweet donuts baked every morning.</p></div>
         <div class="highlight-card"><h3>Special Flavors</h3><p>Premium flavors made with love.</p></div>
     </div>
-
 <?php
-} elseif ($page == 'about') {
-?>
-<div class="container">
-        <h1>About Us</h1>
-        <p><?= $aboutus ?></p>
+} elseif ($page == 'stock') { ?>
+    <h2>Stock Control</h2>
+    <table>
+        <tr>
+            <th>Product</th>
+            <th>Stock</th>
+            <th>Re-Order</th>
+            <th>Total Value</th>
+            <th>Tax Due</th>
+        </tr>
 
-        <div class="highlights">
-            <div class="highlight-card">
-                <h3>Our Mission</h3>
-                <p>To bring a smile to every customer by serving delicious, fresh donuts made with love and high-quality ingredients.</p>
-            </div>
-            <div class="highlight-card">
-                <h3>Our Vision</h3>
-                <p>To be the leading donut shop in our community, known for quality, creativity, and creating joyful experiences for every customer.</p>
-            </div>
-        </div>
-    </div>
-
+        <?php foreach ($donuts as $product_name => $data) { ?>
+        <tr>
+            <td><?= $product_name ?></td>
+            <td><?= $data['stock'] ?></td>
+            <td><?= get_reorder_message($data['stock']) ?></td>
+            <td>₱<?= get_total_value($data['price'], $data['stock']) ?></td>
+            <td>₱<?= get_tax_due($data['price'], $data['stock'], $tax) ?></td>
+        </tr>
+        <?php } ?>
+    </table>
 <?php
-} elseif ($page == 'menu') {
-?>
-    <h1><?= $storeName ?></h1>
+} elseif ($page == 'menu') { ?>
     <p><?= $description ?></p>
     <h2>Our Menu</h2>
     <table>
         <tr><th>Donut Flavors</th><th>Price</th></tr>
-        <?php for ($i = 0; $i < count($donuts); $i++): ?>
-        <tr><td><?= $donuts[$i] ?></td><td>₱<?= $prices[$i] ?></td></tr>
-        <?php endfor; ?>
+        <?php foreach ($donuts as $name => $data): ?>
+        <tr>
+            <td><?= $name ?></td>
+            <td>₱<?= $data['price'] ?></td>
+        </tr>
+        <?php endforeach; ?>
     </table>
     <a class="btn" href="?page=promo">View Our Promo Offers</a>
-
 <?php
-} elseif ($page == 'promo') {
-?>
+} elseif ($page == 'promo') { ?>
     <h1>Special Promos at <?= $storeName ?></h1>
-    <p>
-        Enjoy our exciting promos for better deals on your favorite donuts!
-    </p>
+    <p>Enjoy our exciting promos for better deals on your favorite donuts!</p>
+
     <div class="promo1">
         <h2>Promo 1: 6-Piece Box — 5% Discount</h2>
         <p>Total Price: ₱<?= $totalSix ?></p>
@@ -112,13 +129,9 @@ if ($page == 'home') {
         <p>Discount (5%): ₱<?= $discountChoco ?></p>
         <p><b>Final Price: ₱<?= $finalChocoPrice ?></b></p>
     </div>
-
-<?php
-} else {
-    echo "<h1>Page not found!</h1>";
-}
-?>
-
-<?php include 'footer.php'; ?>
+<?php } else { ?>
+    <h1>Page not found!</h1>
+<?php } ?>
+<?php include 'includes/footer.php'; ?>
 </body>
 </html>

@@ -2,6 +2,7 @@ body {
     margin: 0;
     font-family: "Raleway", sans-serif;
     color: #0000;
+    
 }
 
 body::before {
@@ -11,7 +12,7 @@ body::before {
     left: 0;
     width: 100%;
     height: 100%;
-    background: url('background.png') no-repeat center center/cover;
+    background: url('img/background.png');
     opacity: 0.4;
     z-index: -1;
 }
@@ -26,7 +27,7 @@ h1 {
 
 h2 {
     color: #850825;
-    font-weight: 700;
+    font-weight: bold;
     font-size: 1em;
     text-transform: uppercase;
     letter-spacing: 0.1em;
@@ -60,7 +61,7 @@ th, td {
 }
 
 th {
-    background-color: #fffdd0; 
+    background-color: #850825; 
     color: #000; 
 }
 
@@ -139,4 +140,9 @@ footer {
     font-size: 0.8em;
     color: #fcf6f0;
     background-color: #850825;
-    font-family: "Raleway", sans-serif;}
+    font-family: "Raleway", sans-serif;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}
